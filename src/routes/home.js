@@ -34,11 +34,17 @@ home.get('/', async (req, res) => {
     }
   })
 
-  return res.render('home.pug', {
+  res.render('home.pug', {
       config,
       title: req.session.route.name,
       session: req.session,
   });
+
+  req.session.destroy(req.sessionID, function(err) {
+    if (err) {
+        console.log(err)
+    }
+  })
 })
 
 module.exports = home;
