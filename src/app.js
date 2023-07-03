@@ -60,6 +60,10 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 
+app.get('/', (req, res) => {
+    return res.redirect('/dashboard');
+})
+
 app.get('/test', (req, res) => {
     res.status(200).send({ message: 'Success', });
 });
