@@ -16,20 +16,23 @@ home.get('/', async (req, res) => {
   );
 
   req.session.auth = { permissions: [
-    'view_client',
-    'create_client',
-    'view_user',
-    'create_user',
-  ], }
+    'view client',
+    'create client',
+    'view user',
+    'create user',
+    'view log',
+    'create log',
+  ], };
+  req.session.save(function(err) {
+    if (err) {
+        console.log(err)
+    }
+  })
 
   return res.render('home.pug', {
       config,
       title: 'Homepage',
       session: req.session,
-      data: [
-          results, 
-          results2, 
-      ],
   });
 })
 

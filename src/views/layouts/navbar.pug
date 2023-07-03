@@ -36,7 +36,6 @@ nav(class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="na
           if session.auth && session.auth.permissions.includes('create user')
             li
               a(href="/users/create")= 'Create User'
-      </li>
     if session.auth && session.auth.permissions.includes('view log')
       li.dropdown
         a(href="/logs" class="dropdown-toggle" data-toggle="dropdown")
