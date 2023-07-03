@@ -15,14 +15,19 @@ home.get('/', async (req, res) => {
       },
   );
 
-  req.session.auth = { permissions: [
-    'view client',
-    'create client',
-    'view user',
-    'create user',
-    'view log',
-    'create log',
-  ], };
+  req.session.route = { name: 'Dashboard', };
+  req.session.auth = { 
+    name: 'Jane Doe',
+    lastLogin: '2023-07-03 16:40:00',
+    permissions: [
+      'view client',
+      'create client',
+      'view user',
+      'create user',
+      'view log',
+      'create log',
+    ], 
+  };
   req.session.save(function(err) {
     if (err) {
         console.log(err)
@@ -31,7 +36,7 @@ home.get('/', async (req, res) => {
 
   return res.render('home.pug', {
       config,
-      title: 'Homepage',
+      title: req.session.route.name,
       session: req.session,
   });
 })
