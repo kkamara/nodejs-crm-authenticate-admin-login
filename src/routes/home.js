@@ -1,11 +1,12 @@
 const express = require('express');
 const { QueryTypes, } = require('sequelize');
+const deepClone = require('deep-clone');
 const config = require('../config');
 const db = require('../database');
 
 const home = express.Router();
 
-home.get('/', async (req, res) => {
+home.get('/dashboard', async (req, res) => {
   let author = 'Jane Doe';
   const [results, metadata] = await db.query(
       "SELECT uid, title, author FROM books where author=? ORDER BY uid ASC LIMIT 1", 
@@ -15,8 +16,8 @@ home.get('/', async (req, res) => {
       },
   );
 
-  req.session.route = { name: 'Dashboard', };
-  req.session.auth = { 
+  req.session.page = { title: 'Dashboard', };
+  req.session.auth = {
     name: 'Jane Doe',
     lastLogin: '2023-07-03 16:40:00',
     permissions: [
@@ -28,23 +29,33 @@ home.get('/', async (req, res) => {
       'create log',
     ], 
   };
-  req.session.save(function(err) {
-    if (err) {
-        console.log(err)
-    }
-  })
 
-  res.render('home.pug', {
-      config,
-      title: req.session.route.name,
-      session: req.session,
+  await new Promise((resolve, reject) => {
+    req.session.save(function(err) {
+      if (err) {
+        console.log(err)
+        return reject(err);
+      }
+      resolve()
+    });
   });
-
-  req.session.destroy(req.sessionID, function(err) {
-    if (err) {
+  
+  const session = deepClone(req.session);
+  await new Promise((resolve, reject) => {
+    req.session.destroy(function(err) {
+      if (err) {
         console.log(err)
-    }
-  })
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+  
+  return res.render('home.pug', {
+      config,
+      title: session.page.title,
+      session,
+  });
 })
 
 module.exports = home;

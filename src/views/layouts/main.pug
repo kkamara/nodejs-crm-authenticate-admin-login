@@ -25,7 +25,7 @@ html
                       div(style="color:white;font-size:14px;" class="pull-right")
                         | Logged in as #{session.auth.name} 
                         | #{session.auth.lastLogin}
-                      div(class=`pull-left ${session.route.name === 'Dashboard' ? 'hide' : null}` )
+                      div(class=`pull-left ${session.page.title === 'Dashboard' ? 'hide' : null}` )
                         ol.breadcrumb
                           li.breadcrum-item
                             a(href="/")= Home
