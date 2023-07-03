@@ -4,6 +4,7 @@ const sanitize = require('sanitize');
 const minifyHTML = require("express-minify-html")
 const express = require('express');
 const cons = require('consolidate');
+const session = require('express-session')
 
 const config = require('./config');
 const routes = require('./routes');
@@ -39,6 +40,12 @@ if (config.nodeEnv === 'production') {
     );
 }
 
+app.use(session({ // Sha1 hash.
+    secret: '46ed1ca3c67b873bc249bd0e98addd4dbbbcb4bf',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true, },
+}))
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
