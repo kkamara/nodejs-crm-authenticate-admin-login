@@ -8,6 +8,7 @@ const session = require('express-session')
 
 const config = require('./config');
 const routes = require('./routes');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 
@@ -59,6 +60,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/', routes);
+
+app.use('/api/v1', apiRoutes);
 
 app.get('/', (req, res) => {
     return res.redirect('/dashboard');
