@@ -40,7 +40,8 @@ home.get('/dashboard', async (req, res) => {
     });
   });
   
-  const session = deepClone(req.session);
+  const newSession = { page: req.session.page, auth: req.session.auth, };
+  const session = deepClone(newSession);
   await new Promise((resolve, reject) => {
     req.session.destroy(function(err) {
       if (err) {
