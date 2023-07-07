@@ -91,7 +91,9 @@ login.post('/', async (req, res) => {
   });
 
   // Add logic to authenticate user.
-  // - Using req.body, bcrypt & jwt.
+  // - Using req.body, bcrypt (12 salt rounds) & jwt.
+  // - Bcrypt token: 
+  //    $2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny
 
   return res.json({
     data: {
