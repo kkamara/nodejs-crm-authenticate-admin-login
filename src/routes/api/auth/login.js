@@ -1,20 +1,11 @@
 const express = require('express');
 const { QueryTypes, } = require('sequelize');
 const deepClone = require('deep-clone');
-const config = require('../../../config');
-const db = require('../../../database');
+const user = require('../../../models/user');
 
 const login = express.Router();
 
 login.get('/', async (req, res) => {
-  // let author = 'Jane Doe';
-  // const [results, metadata] = await db.query(
-  //     "SELECT uid, title, author FROM books where author=? ORDER BY uid ASC LIMIT 1", 
-  //     {
-  //         replacements: [ author, ],
-  //         type: QueryTypes.SELECT,
-  //     },
-  // );
 
   req.session.page = { 
     title: 'Login',
@@ -78,8 +69,8 @@ login.post('/', async (req, res) => {
     });
   });
   
-  const newSession = { page: req.session.page, auth: req.session.auth, };
-  const session = deepClone(newSession);
+  let newSession = { page: req.session.page, auth: req.session.auth, };
+  let session = deepClone(newSession);
   await new Promise((resolve, reject) => {
     req.session.destroy(function(err) {
       if (err) {
@@ -90,11 +81,19 @@ login.post('/', async (req, res) => {
     });
   });
 
-  // Add logic to authenticate user.
-  // - Using req.body, bcrypt (12 salt rounds) & jwt.
-  // - Bcrypt token: 
-  //    $2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny
-
+  const user = user.authenticate(req.bodyString('email'), res.bodyString('password'));
+  if (!user) {
+    req.session.page.error = 'Unable to authenticate user due to invalid combination.';
+    newSession = { page: req.session.page, auth: req.session.auth, };
+    session = deepClone(newSession);
+    res.status(400);
+    return res.json({
+      data: {
+        routeName: session.page.title,
+        user: session,
+      },
+    });
+  }
   return res.json({
     data: {
       routeName: session.page.title,
