@@ -1,6 +1,7 @@
 const { QueryTypes, } = require('sequelize');
 const config = require('../config');
 const db = require('../database');
+const { validate, } = require('email-validator');
 
 /**
  * @param {string} email
@@ -32,15 +33,17 @@ const getUser = async (email) => {
  * @return {object|false}
  */
 export const authenticate = async (email, password) => {
-  let res = null;
+  let res = false;
   const user = getUser(email);
   if (!user) {
-    res = false;
+    return res;
+  }
+
+  if (user.password !== password) {
     return res;
   }
   
   res = true;
-
   return res;
 };
 
@@ -51,8 +54,22 @@ export const authenticate = async (email, password) => {
  * @return {true|array}
  */
 export const validateAuthenticate = async (email, password) => {
-  // Add error handling logic.
+  let res = [];
   if (!email) {
-
+    res.push('Missing email field.');
+  } else if (email.length > 1024) {
+    res.push('Email field exceeds 1024 character limit.')
+  } else if (!validate(email)) {
+    res.push('Email field must be a valid email.')
   }
+  if (!password) {
+    res.push('Missing email field.');
+  } else if (password.length > 100) {
+    res.push('Password field exceeds 100 character limit.')
+  }
+
+  if (!res.length) {
+    res = true;
+  }
+  return res;
 };

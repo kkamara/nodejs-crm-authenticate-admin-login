@@ -81,6 +81,20 @@ login.post('/', async (req, res) => {
     });
   });
 
+  const validInput = user.validateAuthenticate(req.bodyString('email'), res.bodyString('password'));
+  if (validInput !== true) {
+    req.session.page.error = validInput[0];
+    newSession = { page: req.session.page, auth: req.session.auth, };
+    session = deepClone(newSession);
+    res.status(400);
+    return res.json({
+      data: {
+        routeName: session.page.title,
+        user: session,
+      },
+    });
+  }
+
   const user = user.authenticate(req.bodyString('email'), res.bodyString('password'));
   if (!user) {
     req.session.page.error = 'Unable to authenticate user due to invalid combination.';
