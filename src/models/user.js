@@ -28,7 +28,7 @@ const getUser = async (email) => {
 
 /**
  * Add logic to authenticate user.
- * - Using req.body, bcrypt (12 salt rounds) & jwt.
+ * - Using cleaned req.bodyString, bcrypt (12 salt rounds) & jsonwebtoken.
  * - Bcrypt token: 
  *    $2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny
  * @param {string} email
