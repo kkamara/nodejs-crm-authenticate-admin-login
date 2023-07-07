@@ -10,7 +10,10 @@ const { validate, } = require('email-validator');
 const getUser = async (email) => {
   let res = false
   const [results, metadata] = await db.query(
-    `SELECT uid, password FROM users where users.email=? LIMIT 1`, 
+    `SELECT uid, password, building_number, city, contact_number, 
+    created_at, email, email_reset_key, first_name, 
+    last_name, password, last_login, remember_token, street_name,
+    updated_at, username FROM users where users.email=? LIMIT 1`, 
     {
         replacements: [ email, ],
         type: QueryTypes.SELECT,

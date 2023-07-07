@@ -15,10 +15,10 @@ const User = sequelize.define("users", {
    username: {
      type: DataTypes.STRING,
    },
-   firstName: {
+   first_name: {
      type: DataTypes.STRING,
    },
-   lastName: {
+   last_name: {
      type: DataTypes.STRING,
    },
    email: {
@@ -72,8 +72,8 @@ sequelize.sync().then(() => {
   log('User table created successfully!');
   User.create({
     username: 'tomato.pear',
-    firstName: 'Admin',
-    lastName: 'User',
+    first_name: 'Admin',
+    last_name: 'User',
     email: 'admin@mail.com',
     password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
@@ -81,8 +81,8 @@ sequelize.sync().then(() => {
   .catch(() => { log('Unable to create user.'); });
   User.create({
     username: 'qiwi',
-    firstName: 'Client',
-    lastName: 'Admin',
+    first_name: 'Client',
+    last_name: 'Admin',
     email: 'clientadmin@mail.com',
     password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
@@ -90,8 +90,8 @@ sequelize.sync().then(() => {
   .catch(() => { log('Unable to create user.'); });
   User.create({
     username: 'cabbage.orange',
-    firstName: 'Client',
-    lastName: 'User',
+    first_name: 'Client',
+    last_name: 'User',
     email: 'clientuser@mail.com',
     password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
