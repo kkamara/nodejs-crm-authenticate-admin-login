@@ -32,7 +32,7 @@ const getUser = async (email) => {
  * @param {string} password
  * @return {object|false}
  */
-export const authenticate = async (email, password) => {
+const authenticate = async (email, password) => {
   let res = false;
   const user = getUser(email);
   if (!user) {
@@ -53,7 +53,7 @@ export const authenticate = async (email, password) => {
  * @param {string} password 
  * @return {true|array}
  */
-export const validateAuthenticate = async (email, password) => {
+const validateAuthenticate = async (email, password) => {
   let res = [];
   if (!email) {
     res.push('Missing email field.');
@@ -72,4 +72,9 @@ export const validateAuthenticate = async (email, password) => {
     res = true;
   }
   return res;
+};
+
+module.exports = {
+  authenticate,
+  validateAuthenticate,
 };
