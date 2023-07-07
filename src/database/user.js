@@ -75,6 +75,7 @@ sequelize.sync().then(() => {
     firstName: 'Admin',
     lastName: 'User',
     email: 'admin@mail.com',
+    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });
@@ -83,6 +84,7 @@ sequelize.sync().then(() => {
     firstName: 'Client',
     lastName: 'Admin',
     email: 'clientadmin@mail.com',
+    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });
@@ -91,6 +93,7 @@ sequelize.sync().then(() => {
     firstName: 'Client',
     lastName: 'User',
     email: 'clientuser@mail.com',
+    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });
