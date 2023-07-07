@@ -57,4 +57,48 @@ login.get('/', async (req, res) => {
   });
 })
 
+login.post('/', async (req, res) => {
+  req.session.page = { 
+    title: 'Login Action',
+    loginEmails: [
+      'admin@mail.com',
+      'clientadmin@mail.com',
+      'clientuser@mail.com',
+    ],
+  };
+  req.session.auth = null;
+
+  await new Promise((resolve, reject) => {
+    req.session.save(function(err) {
+      if (err) {
+        console.log(err)
+        return reject(err);
+      }
+      resolve()
+    });
+  });
+  
+  const newSession = { page: req.session.page, auth: req.session.auth, };
+  const session = deepClone(newSession);
+  await new Promise((resolve, reject) => {
+    req.session.destroy(function(err) {
+      if (err) {
+        console.log(err)
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+
+  // Add logic to authenticate user.
+  // - Using req.body, bcrypt & jwt.
+
+  return res.json({
+    data: {
+      routeName: session.page.title,
+      user: session,
+    },
+});
+});
+
 module.exports = login;
