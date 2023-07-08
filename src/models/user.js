@@ -42,7 +42,14 @@ const authenticate = async (email, password) => {
     return res;
   }
 
-  if (user.password !== password) {
+  /**
+   * The bcrypt generation of password.
+   * @var {string} passwordGen
+   */
+  let passwordGen = '';
+
+
+  if (user.password !== passwordGen) {
     return res;
   }
   
