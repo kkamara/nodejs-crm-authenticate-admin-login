@@ -35,8 +35,8 @@
 ###### Reload server on project files change
 
 ```bash
-  yarn dev # Runs Dev-script `nodemon src/app.js`
-  # We can also `APP_ENV=development nodemon src/app.js`.
+  yarn dev # Runs Dev-script `nodemon yarn src/app.js`
+  # We can also `APP_ENV=development nodemon yarn src/app.js`.
 ```
 
 
