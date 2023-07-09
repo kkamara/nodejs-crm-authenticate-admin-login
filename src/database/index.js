@@ -1,10 +1,12 @@
+"use strict";
+
 const Sequelize = require("sequelize");
 const { error, log, } = require('console');
 const config = require('../config');
 
 let logging = false;
 if ('production' !== config.nodeEnv) {
-   logging = true;
+   logging = log;
 }
 
 const db = new Sequelize(

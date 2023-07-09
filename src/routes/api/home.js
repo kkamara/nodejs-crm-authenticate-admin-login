@@ -1,3 +1,4 @@
+"use strict";
 const express = require('express');
 const { QueryTypes, } = require('sequelize');
 const deepClone = require('deep-clone');
@@ -7,11 +8,11 @@ const db = require('../../database');
 const home = express.Router();
 
 home.get('/', async (req, res) => {
-  let author = 'Jane Doe';
+  const adminUser = 3;
   const [results, metadata] = await db.query(
-      "SELECT uid, title, author FROM books where author=? ORDER BY uid ASC LIMIT 1", 
+      "SELECT uid FROM users WHERE users.uid = ? ORDER BY uid DESC LIMIT 1", 
       {
-          replacements: [ author, ],
+          replacements: [ adminUser, ],
           type: QueryTypes.SELECT,
       },
   );

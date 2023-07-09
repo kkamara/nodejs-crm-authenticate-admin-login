@@ -1,3 +1,4 @@
+"use strict";
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const sanitize = require('sanitize');

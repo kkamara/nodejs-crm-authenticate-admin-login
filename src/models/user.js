@@ -1,3 +1,5 @@
+"use strict";
+
 const { QueryTypes, } = require('sequelize');
 const config = require('../config');
 const db = require('../database');
