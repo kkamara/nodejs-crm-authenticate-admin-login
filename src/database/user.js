@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const { DataTypes, } = require("sequelize");
 const { log, error, } = require('console');
 const sequelize = require('.');

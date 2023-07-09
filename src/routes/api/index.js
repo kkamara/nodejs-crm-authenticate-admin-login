@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const express = require('express');
 const home = require('./home');
 const auth = require('./auth');

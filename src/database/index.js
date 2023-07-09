@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const Sequelize = require("sequelize");
 const { error, log, } = require('console');

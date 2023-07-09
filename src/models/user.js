@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const { QueryTypes, } = require('sequelize');
 const config = require('../config');
