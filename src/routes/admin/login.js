@@ -5,19 +5,19 @@ const deepClone = require('deep-clone');
 const config = require('../../config');
 const db = require('../../database');
 
-const home = express.Router();
+const login = express.Router();
 
-home.get('/', async (req, res) => {
-  const adminUser = 3;
-  const [results, metadata] = await db.query(
-      "SELECT uid FROM users WHERE users.uid = ? ORDER BY uid DESC LIMIT 1", 
-      {
-          replacements: [ adminUser, ],
-          type: QueryTypes.SELECT,
-      },
-  );
+login.get('/', async (req, res) => {
+  // const adminUser = 3;
+  // const [results, metadata] = await db.query(
+  //     "SELECT uid FROM users WHERE users.uid = ? ORDER BY uid DESC LIMIT 1", 
+  //     {
+  //         replacements: [ adminUser, ],
+  //         type: QueryTypes.SELECT,
+  //     },
+  // );
 
-  req.session.page = { title: 'Dashboard', };
+  req.session.page = { title: 'Admin Login', };
   req.session.auth = {
     name: 'Jane Doe',
     lastLogin: '2023-07-03 16:40:00',
@@ -53,14 +53,11 @@ home.get('/', async (req, res) => {
     });
   });
   
-  res.status(200);
-  return res.json({
-      data: {
-        results,
-        routeName: session.page.title,
-        user: session,
-      },
+  return res.render('admin/auth/login.pug', {
+      config,
+      title: session.page.title,
+      session,
   });
-})
+});
 
-module.exports = home;
+module.exports = login;

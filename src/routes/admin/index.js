@@ -1,11 +1,9 @@
 'use strict';
 const express = require('express');
-const home = require('./home');
-const auth = require('./auth');
+const login = require('./login');
 
 const router = express.Router();
 
-router.use('/', home);
-router.use('/auth', auth);
+router.use('/', login);
 
 module.exports = router;
