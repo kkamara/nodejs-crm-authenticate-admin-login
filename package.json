@@ -37,7 +37,8 @@
     "nodemon": "^2.0.22",
     "pug": "^3.0.2",
     "sanitize": "^2.1.0",
-    "sequelize": "^6.13.0"
+    "sequelize": "^6.13.0",
+    "vali-admin": "^4.0.0"
   },
   "devDependencies": {
     "assert": "^2.0.0",
