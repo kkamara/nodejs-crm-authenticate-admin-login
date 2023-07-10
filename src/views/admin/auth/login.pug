@@ -55,12 +55,12 @@ html
                 i.bi.bi-chevron-left.me-1
                 |  Back to Login
     // Essential javascripts for application to work
-    script(src='js/jquery-3.7.0.min.js')
-    script(src='js/bootstrap.min.js')
-    script(src='js/main.js')
+    script(src='/admin/js/jquery-3.7.0.min.js')
+    script(src='/admin/js/bootstrap.min.js')
+    script(src='/admin/js/main.js')
     script(type='text/javascript').
       // Login Page Flipbox control
       $('.login-content [data-toggle="flip"]').click(function() {
       $('.login-box').toggleClass('flipped');
-      return false;
+        return false;
       });
