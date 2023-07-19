@@ -22,17 +22,17 @@ html
             | SIGN IN
           .mb-3
             label.form-label USERNAME
-            input.email.form-control.is-invalid(type='text', placeholder='Email', autofocus='')
+            input.email.form-control.is-invalid(name='username', type='text', placeholder='Email', autofocus='')
             div#validationEmail.invalid-feedback
               Please choose a username.
           .mb-3
             label.form-label PASSWORD
-            input.form-control(type='password', placeholder='Password')
+            input.form-control(name='password', type='password', placeholder='Password')
           .mb-3
             .utility
               .form-check
                 label.form-check-label
-                  input.form-check-input(type='checkbox')
+                  input.form-check-input(name='remember', type='checkbox')
                   span.label-text Stay Signed in
               p.semibold-text.mb-2
                 a(href='#', data-toggle='flip') Forgot Password ?
