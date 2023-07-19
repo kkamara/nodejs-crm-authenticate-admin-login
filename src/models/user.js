@@ -7,6 +7,51 @@ const { validate, } = require('email-validator');
 const bcrypt = require('bcrypt');
 
 /**
+ * @param {Number} id
+ * @return {object|false}
+ */
+const refreshUser = async (id) => {
+  let res = false
+  const [results, metadata] = await db.query(
+    `UPDATE users SET updated_at=NOW()
+     WHERE uid = ?`, 
+    {
+        replacements: [ id, ],
+        type: QueryTypes.SELECT,
+    },
+  );
+  if (!results) {
+    return res;
+  }
+  
+  res = await getUserById(id);
+  return res;
+};
+
+/**
+ * @param {string} email
+ * @return {object|false}
+ */
+const getUserById = async (email) => {
+  let res = false
+  const [results, metadata] = await db.query(
+    `SELECT uid, password, building_number, city, contact_number, 
+    created_at, email, email_reset_key, first_name, 
+    last_name, password, last_login, remember_token, street_name,
+    updated_at, username FROM users where users.uid=? LIMIT 1`, 
+    {
+        replacements: [ id, ],
+        type: QueryTypes.SELECT,
+    },
+  );
+  if (!results) {
+    return res;
+  }
+  res = results[0];
+  return res;
+};
+
+/**
  * @param {string} email
  * @return {object|false}
  */
@@ -27,6 +72,45 @@ const getUser = async (email) => {
   }
   res = results[0];
   return res;
+};
+
+/**
+ * 
+ * @param {Number} id User's id.
+ * @return {string|false} String token. 
+ */
+const getNewToken = async (id) => {
+  const appKey = 'secret';
+  const result = await new Promise((resolve, reject) => {
+    bcrypt.hash(appKey, 12, function(err, hash) {
+      if (err !== null) {
+        reject(err);
+      }
+      resolve(hash);
+    });
+  });
+  if (result instanceof Error) {
+    return false;
+  }
+  const [addToken, metadata] = await db.query(
+    `INSERT INTO user_tokens(
+      users_uid,token,created_at,updated_at
+    ) VALUES(
+      ?, ?, created_at=NOW(), updated_at=NOW()
+    )`, 
+    {
+        replacements: [ id, result, ],
+        type: QueryTypes.SELECT,
+    },
+  );
+  if (!addToken) {
+    return false;
+  }
+  const refreshUser = await refreshUser(id);
+  if (!refreshUser) {
+    return false;
+  }
+  return result;
 };
 
 /**
@@ -56,8 +140,8 @@ const authenticate = async (email, password) => {
   if (compare === false) {
     return res;
   }
-  
-  res = user;
+
+  res = await refreshUser(user.id);
   return res;
 };
 
@@ -91,4 +175,5 @@ const validateAuthenticate = async (email, password) => {
 module.exports = {
   authenticate,
   validateAuthenticate,
+  getNewToken,
 };

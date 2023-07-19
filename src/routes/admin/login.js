@@ -4,6 +4,11 @@ const { QueryTypes, } = require('sequelize');
 const deepClone = require('deep-clone');
 const config = require('../../config');
 const db = require('../../database');
+const { 
+  validateAuthenticate,
+  authenticate,
+  getNewToken,
+} = require('../../models/user');
 
 const login = express.Router();
 
@@ -54,29 +59,30 @@ login.post('/', async (req, res) => {
     });
   });
   
-  const newSession = { page: req.session.page, auth: req.session.auth, };
-  const session = deepClone(newSession);
-
   const email = req.bodyString('email');
   const password = req.bodyString('password');
 
-  if (!email) {
+  const validInput = validateAuthenticate(email, password);
+  if (validInput instanceof Array) {
     res.status(400);
-    return res.json({ message: 'Missing email field.' });
+    return res.json({ 
+      message: 'Bad request.',
+      errors: validInput,
+    });
   }
 
-  if (!password) {
-    res.status(400);
-    return res.json({ message: 'Missing password field.' });
-  }
-
-  const user = user.authenticate(email, password);
+  const user = await authenticate(email, password);
   req.session.auth = user;
   if (!user) {
     res.status(400);
     return res.json({ message: 'Invalid user and password combination.' });
   }
 
+  const token = await getNewToken(user.uid);
+  req.session.auth.token = token;
+
+  const newSession = { page: req.session.page, auth: req.session.auth, };
+  const session = deepClone(newSession);
   await new Promise((resolve, reject) => {
     req.session.destroy(function(err) {
       if (err) {
@@ -87,7 +93,11 @@ login.post('/', async (req, res) => {
     });
   });
   
-  return res.redirect('/admin/dashboard');
+  res.status(200);
+  return res.json({ 
+    routeName: session.page.title,
+    user: session, 
+  });
 });
 
 module.exports = login;
