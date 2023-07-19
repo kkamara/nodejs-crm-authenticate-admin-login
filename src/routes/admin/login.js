@@ -61,8 +61,8 @@ login.post('/', async (req, res) => {
   
   const email = req.bodyString('email');
   const password = req.bodyString('password');
-
-  const validInput = validateAuthenticate(email, password);
+  
+  const validInput = validateAuthenticate(email, password);  
   if (validInput instanceof Array) {
     res.status(400);
     return res.json({ 

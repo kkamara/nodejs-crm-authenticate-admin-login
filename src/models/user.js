@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt');
  * @return {object|false}
  */
 const refreshUser = async (id) => {
-  let res = false
+  let res = false;
   const [results, metadata] = await db.query(
     `UPDATE users SET updated_at=NOW()
      WHERE uid = ?`, 
@@ -33,7 +33,7 @@ const refreshUser = async (id) => {
  * @return {object|false}
  */
 const getUserById = async (email) => {
-  let res = false
+  let res = false;
   const [results, metadata] = await db.query(
     `SELECT uid, password, building_number, city, contact_number, 
     created_at, email, email_reset_key, first_name, 
@@ -56,7 +56,8 @@ const getUserById = async (email) => {
  * @return {object|false}
  */
 const getUser = async (email) => {
-  let res = false
+  let res = false;
+  
   const [results, metadata] = await db.query(
     `SELECT uid, password, building_number, city, contact_number, 
     created_at, email, email_reset_key, first_name, 
@@ -67,6 +68,7 @@ const getUser = async (email) => {
         type: QueryTypes.SELECT,
     },
   );
+  
   if (!results) {
     return res;
   }
@@ -84,7 +86,7 @@ const getNewToken = async (id) => {
   const result = await new Promise((resolve, reject) => {
     bcrypt.hash(appKey, 12, function(err, hash) {
       if (err !== null) {
-        reject(err);
+        return reject(err);
       }
       resolve(hash);
     });
@@ -132,7 +134,7 @@ const authenticate = async (email, password) => {
   const compare = await new Promise((resolve, reject) => {
     bcrypt.compare(password, user.password, function(err, pwdMatch) {
       if (err !== null) {
-        reject(err);
+        return reject(err);
       }
       resolve(pwdMatch);
     });
@@ -151,7 +153,7 @@ const authenticate = async (email, password) => {
  * @param {string} password 
  * @return {true|array}
  */
-const validateAuthenticate = async (email, password) => {
+const validateAuthenticate = (email, password) => {
   let res = [];
   if (!email) {
     res.push('Missing email field.');
