@@ -22,7 +22,9 @@ html
             | SIGN IN
           .mb-3
             label.form-label USERNAME
-            input.form-control(type='text', placeholder='Email', autofocus='')
+            input.email.form-control.is-invalid(type='text', placeholder='Email', autofocus='')
+            div#validationEmail.invalid-feedback
+              Please choose a username.
           .mb-3
             label.form-label PASSWORD
             input.form-control(type='password', placeholder='Password')
@@ -64,3 +66,4 @@ html
       $('.login-box').toggleClass('flipped');
         return false;
       });
+    script(src='/admin/js/login.js')

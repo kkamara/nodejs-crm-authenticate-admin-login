@@ -45,12 +45,6 @@ const authenticate = async (email, password) => {
     return res;
   }
 
-  /**
-   * The bcrypt generation of password.
-   * @var {string} passwordGen
-   */
-  let passwordGen = '';
-
   const compare = await new Promise((resolve, reject) => {
     bcrypt.compare(password, user.password, function(err, pwdMatch) {
       if (err !== null) {
