@@ -4,6 +4,7 @@ const { QueryTypes, } = require('sequelize');
 const config = require('../config');
 const db = require('../database');
 const { validate, } = require('email-validator');
+const bcrypt = require('bcrypt');
 
 /**
  * @param {string} email
@@ -50,12 +51,19 @@ const authenticate = async (email, password) => {
    */
   let passwordGen = '';
 
-
-  if (user.password !== passwordGen) {
+  const compare = await new Promise((resolve, reject) => {
+    bcrypt.compare(password, user.password, function(err, pwdMatch) {
+      if (err !== null) {
+        reject(err);
+      }
+      resolve(pwdMatch);
+    });
+  });
+  if (compare === false) {
     return res;
   }
   
-  res = true;
+  res = user;
   return res;
 };
 
