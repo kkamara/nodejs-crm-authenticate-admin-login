@@ -70,16 +70,32 @@ login.post('/', async (req, res) => {
       errors: validInput,
     });
   }
-
-  const user = await authenticate(email, password);
-  req.session.auth = user;
-  if (!user) {
+  
+  try {
+    req.session.auth = await authenticate(email, password);
+    console.log('req.session.auth :',req.session.auth)
+    if (req.session.auth === false) {
+      res.status(400);
+      return res.json({ 
+        message: 'Invalid user and password combination.',
+      });
+    }
+  } catch(err) {
     res.status(400);
-    return res.json({ message: 'Invalid user and password combination.' });
+    return res.json({ 
+      message: 'Invalid user and password combination.',
+    });
   }
-
-  const token = await getNewToken(user.uid);
-  req.session.auth.token = token;
+  try {
+    req.session.auth.token = await getNewToken(
+      req.session.auth.uid,
+    );
+  } catch(err) {
+    res.status(500);
+    return res.json({ 
+      message: 'Please try again and contact administrator.',
+    });
+  }
 
   const newSession = { page: req.session.page, auth: req.session.auth, };
   const session = deepClone(newSession);

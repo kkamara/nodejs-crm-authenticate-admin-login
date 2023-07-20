@@ -52,15 +52,16 @@ const compare = (plainText, hash, hashSalt) => {
  */
 const refreshUser = async (id) => {
   let res = false;
+  try {
   const [results, metadata] = await db.query(
     `UPDATE users SET updated_at=NOW()
-     WHERE uid = ?`, 
+      WHERE uid = :id`, 
     {
-        replacements: [ id, ],
-        type: QueryTypes.SELECT,
+          replacements: { id, },
+          type: QueryTypes.UPDATE,
     },
   );
-  if (!results) {
+  } catch(err) {
     return res;
   }
   
@@ -69,11 +70,12 @@ const refreshUser = async (id) => {
 };
 
 /**
- * @param {string} email
+ * @param {string} id
  * @return {object|false}
  */
-const getUserById = async (email) => {
+const getUserById = async (id) => {
   let res = false;
+  try {
   const [results, metadata] = await db.query(
     `SELECT uid, password, building_number, city, contact_number, 
     created_at, email, email_reset_key, first_name, 
@@ -84,11 +86,11 @@ const getUserById = async (email) => {
         type: QueryTypes.SELECT,
     },
   );
-  if (!results) {
-    return res;
-  }
   res = results[0];
   return res;
+  } catch(err) {
+    return res;
+  }
 };
 
 /**
@@ -97,9 +99,9 @@ const getUserById = async (email) => {
  */
 const getUser = async (email) => {
   let res = false;
-  
-  const [results, metadata] = await db.query(
-    `SELECT uid, password, building_number, city, contact_number, 
+  try {
+    const [result, metadata] = await db.query(
+      `SELECT uid, password, password_salt, building_number, city, contact_number, 
     created_at, email, email_reset_key, first_name, 
     last_name, password, last_login, remember_token, street_name,
     updated_at, username FROM users where users.email=? LIMIT 1`, 
@@ -108,12 +110,12 @@ const getUser = async (email) => {
         type: QueryTypes.SELECT,
     },
   );
-  
-  if (!results) {
+    res = result;
+    return res;
+  } catch(err) {
+    console.log('error : '+err.message);
     return res;
   }
-  res = results[0];
-  return res;
 };
 
 /**
@@ -123,7 +125,7 @@ const getUser = async (email) => {
  */
 const getNewToken = async (id) => {
   const result = encrypt(config.appKey);
-  
+  try {
   const [addToken, metadata] = await db.query(
     `INSERT INTO user_tokens(
       users_uid,token,created_at,updated_at
@@ -132,17 +134,18 @@ const getNewToken = async (id) => {
     )`, 
     {
         replacements: [ id, result.hash, ],
-        type: QueryTypes.SELECT,
+          type: QueryTypes.INSERT,
     },
   );
-  if (!addToken) {
-    return false;
-  }
+
   const refreshUser = await refreshUser(id);
   if (!refreshUser) {
     return false;
   }
   return result.hash;
+  } catch(err) {
+    return false;
+  }
 };
 
 /**
@@ -156,21 +159,23 @@ const getNewToken = async (id) => {
  */
 const authenticate = async (email, password) => {
   let res = false;
+    
   const user = await getUser(email);
   if (!user) {
     return res;
   }
   
-  const compare = compare(
+  const compareHash = compare(
     password,
     user.password,
     user.password_salt
   );
-  if (compare === false) {
+  if (compareHash === false) {
     return res;
   }
 
-  res = await refreshUser(user.id);
+  res = await refreshUser(user.uid);
+  
   return res;
 };
 

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha tests/",
     "start": "yarn node src/app.js",
-    "dev": "nodemon yarn src/app.js",
+    "dev": "nodemon yarn node src/app.js --trace-warnings",
     "migrate": "yarn node src/index.js"
   },
   "repository": {
