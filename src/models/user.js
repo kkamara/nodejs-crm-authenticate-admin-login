@@ -126,11 +126,11 @@ const getNewToken = async (id) => {
  */
 const authenticate = async (email, password) => {
   let res = false;
-  const user = getUser(email);
+  const user = await getUser(email);
   if (!user) {
     return res;
   }
-
+console.log(user, email, password)
   const compare = await new Promise((resolve, reject) => {
     bcrypt.compare(password, user.password, function(err, pwdMatch) {
       if (err !== null) {

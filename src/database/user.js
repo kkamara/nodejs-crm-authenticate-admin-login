@@ -60,13 +60,6 @@ const User = sequelize.define("users", {
    email_reset_key: {
      type: DataTypes.INTEGER,
    },
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['user_created',],
-    },
-  ],
 });
 
 sequelize.sync().then(() => {
