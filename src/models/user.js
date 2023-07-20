@@ -130,9 +130,9 @@ const getNewToken = async (id) => {
   try {
     const [addToken, metadata] = await db.query(
       `INSERT INTO users_tokens(
-        users_id,token,created_at,updated_at
+        users_id, token, created_at, updated_at
       ) VALUES(
-        ?, ?, created_at=NOW(), updated_at=NOW()
+        ?, ?, NOW(), NOW()
       )`, 
       {
           replacements: [ id, result.hash, ],

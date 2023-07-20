@@ -8,19 +8,21 @@ const UserTokens = sequelize.define("users_tokens", {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-   },
-   users_id: {
-     type: DataTypes.INTEGER,
-   },
-   token: {
-     type: DataTypes.STRING,
-   },
-   created_at: {
-     type: DataTypes.DATE,
-   },
-   updated_at: {
-     type: DataTypes.DATE,
-   },
+  },
+  users_id: {
+    type: DataTypes.INTEGER,
+  },
+  token: {
+    type: DataTypes.STRING,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
 sequelize.sync().then(async () => {
