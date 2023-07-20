@@ -11,6 +11,42 @@ const {
 } = require('crypto');
 
 /**
+ * Returns the salt and hash
+ * @param {string} plainText
+ * @return {object} Like { salt, hash, }.
+ */
+const encrypt = (plainText) => {
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(plainText, salt, 64)
+    .toString('hex');
+  return { salt, hash, };
+};
+
+/**
+ * Compare resulting hashes.
+ * @param {string} plainText
+ * @param {string} hash
+ * @param {string} hashSalt
+ * @return {bool}
+ */
+const compare = (plainText, hash, hashSalt) => {  
+  let res = false;
+  const hashedBuffer = scryptSync(
+    plainText, hashSalt, 64,
+  );
+
+  const keyBuffer = Buffer.from(hash, 'hex');
+  const match = timingSafeEqual(hashedBuffer, keyBuffer);
+  
+  if (!match) {
+      return res;
+  }
+
+  res = true;
+  return res;
+};
+
+/**
  * @param {Number} id
  * @return {object|false}
  */
