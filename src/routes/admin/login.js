@@ -73,7 +73,9 @@ login.post('/', async (req, res) => {
   
   try {
     req.session.auth = await authenticate(email, password);
-    console.log('req.session.auth :',req.session.auth)
+    if (config.nodeEnv !== 'production') {
+      console.log('req.session.auth :',req.session.auth)
+    }
     if (req.session.auth === false) {
       res.status(400);
       return res.json({ 

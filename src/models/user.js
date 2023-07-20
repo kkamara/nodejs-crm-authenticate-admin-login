@@ -53,14 +53,14 @@ const compare = (plainText, hash, hashSalt) => {
 const refreshUser = async (id) => {
   let res = false;
   try {
-  const [results, metadata] = await db.query(
-    `UPDATE users SET updated_at=NOW()
-      WHERE uid = :id`, 
-    {
-          replacements: { id, },
-          type: QueryTypes.UPDATE,
-    },
-  );
+    const [results, metadata] = await db.query(
+      `UPDATE users SET updated_at=NOW()
+        WHERE uid = :id`, 
+      {
+            replacements: { id, },
+            type: QueryTypes.UPDATE,
+      },
+    );
   } catch(err) {
     return res;
   }
@@ -76,7 +76,7 @@ const refreshUser = async (id) => {
 const getUserById = async (id) => {
   let res = false;
   try {
-  const [results, metadata] = await db.query(
+  const [result, metadata] = await db.query(
     `SELECT uid, password, building_number, city, contact_number, 
     created_at, email, email_reset_key, first_name, 
     last_name, password, last_login, remember_token, street_name,
@@ -86,7 +86,7 @@ const getUserById = async (id) => {
         type: QueryTypes.SELECT,
     },
   );
-  res = results[0];
+  res = result;
   return res;
   } catch(err) {
     return res;
@@ -113,7 +113,9 @@ const getUser = async (email) => {
     res = result;
     return res;
   } catch(err) {
-    console.log('error : '+err.message);
+    if (config.nodeEnv !== 'production') {
+      console.log('error : '+err.message);
+    }
     return res;
   }
 };
@@ -126,24 +128,27 @@ const getUser = async (email) => {
 const getNewToken = async (id) => {
   const result = encrypt(config.appKey);
   try {
-  const [addToken, metadata] = await db.query(
-    `INSERT INTO user_tokens(
-      users_uid,token,created_at,updated_at
-    ) VALUES(
-      ?, ?, created_at=NOW(), updated_at=NOW()
-    )`, 
-    {
-        replacements: [ id, result.hash, ],
-          type: QueryTypes.INSERT,
-    },
-  );
-
-  const refreshUser = await refreshUser(id);
-  if (!refreshUser) {
-    return false;
-  }
-  return result.hash;
+    const [addToken, metadata] = await db.query(
+      `INSERT INTO user_tokens(
+        users_uid,token,created_at,updated_at
+      ) VALUES(
+        ?, ?, created_at=NOW(), updated_at=NOW()
+      )`, 
+      {
+          replacements: [ id, result.hash, ],
+            type: QueryTypes.INSERT,
+      },
+    );
+    
+    const refreshUser = await refreshUser(id);
+    if (refreshUser === false) {
+      return false;
+    }
+    return result.hash;
   } catch(err) {
+    if (config.nodeEnv !== 'production') {
+      console.log('error : '+err.message);
+    }
     return false;
   }
 };
@@ -175,7 +180,6 @@ const authenticate = async (email, password) => {
   }
 
   res = await refreshUser(user.uid);
-  
   return res;
 };
 
