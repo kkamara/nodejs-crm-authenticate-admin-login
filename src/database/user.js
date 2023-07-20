@@ -28,6 +28,9 @@ const User = sequelize.define("users", {
    password: {
      type: DataTypes.STRING,
    },
+   password_salt: {
+     type: DataTypes.STRING,
+   },
    contact_number: {
      type: DataTypes.STRING,
      allowNull: true,
