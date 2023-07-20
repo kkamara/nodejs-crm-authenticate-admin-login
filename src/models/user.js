@@ -129,8 +129,8 @@ const getNewToken = async (id) => {
   const result = encrypt(config.appKey);
   try {
     const [addToken, metadata] = await db.query(
-      `INSERT INTO user_tokens(
-        users_uid,token,created_at,updated_at
+      `INSERT INTO users_tokens(
+        users_id,token,created_at,updated_at
       ) VALUES(
         ?, ?, created_at=NOW(), updated_at=NOW()
       )`, 
@@ -140,8 +140,8 @@ const getNewToken = async (id) => {
       },
     );
     
-    const refreshUser = await refreshUser(id);
-    if (refreshUser === false) {
+    const user = await refreshUser(id);
+    if (user === false) {
       return false;
     }
     return result.hash;
