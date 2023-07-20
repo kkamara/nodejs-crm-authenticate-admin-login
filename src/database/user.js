@@ -2,6 +2,7 @@
 const { DataTypes, } = require("sequelize");
 const { log, error, } = require('console');
 const sequelize = require('.');
+const { encrypt, } = require('../models/user');
 
 const User = sequelize.define("users", {
   uid: {
@@ -41,15 +42,19 @@ const User = sequelize.define("users", {
    },
    building_number: {
      type: DataTypes.STRING,
+     allowNull: true,
    },
    city: {
      type: DataTypes.STRING,
+     allowNull: true,
    },
    postcode: {
      type: DataTypes.STRING,
+     allowNull: true,
    },
    remember_token: {
      type: DataTypes.STRING,
+     allowNull: true,
    },
    created_at: {
      type: DataTypes.DATE,
@@ -59,20 +64,26 @@ const User = sequelize.define("users", {
    },
    last_login: {
      type: DataTypes.DATE,
+     allowNull: true,
    },
    email_reset_key: {
      type: DataTypes.INTEGER,
+     allowNull: true,
    },
 });
 
 sequelize.sync().then(() => {
   log('User table created successfully!');
+
+  const { hash, salt } = encrypt('secret');
+
   User.create({
     username: 'tomato.pear',
     first_name: 'Admin',
     last_name: 'User',
     email: 'admin@mail.com',
-    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    password: hash,
+    password_salt: salt,
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });
@@ -81,7 +92,8 @@ sequelize.sync().then(() => {
     first_name: 'Client',
     last_name: 'Admin',
     email: 'clientadmin@mail.com',
-    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    password: hash,
+    password_salt: salt,
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });
@@ -90,7 +102,8 @@ sequelize.sync().then(() => {
     first_name: 'Client',
     last_name: 'User',
     email: 'clientuser@mail.com',
-    password: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    password: hash,
+    password_salt: salt,
   })
   .then(() => { log('User created.'); })
   .catch(() => { log('Unable to create user.'); });

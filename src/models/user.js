@@ -122,20 +122,8 @@ const getUser = async (email) => {
  * @return {string|false} String token. 
  */
 const getNewToken = async (id) => {
-  const appKey = 'secret';
-  const result = await new Promise((resolve, reject) => {
-    /*
-    bcrypt.hash(appKey, 12, function(err, hash) {
-      if (err !== null) {
-        return reject(err);
-      }
-      resolve(hash);
-    });
-    */
-  });
-  if (result instanceof Error) {
-    return false;
-  }
+  const result = encrypt(config.appKey);
+  
   const [addToken, metadata] = await db.query(
     `INSERT INTO user_tokens(
       users_uid,token,created_at,updated_at
@@ -143,7 +131,7 @@ const getNewToken = async (id) => {
       ?, ?, created_at=NOW(), updated_at=NOW()
     )`, 
     {
-        replacements: [ id, result, ],
+        replacements: [ id, result.hash, ],
         type: QueryTypes.SELECT,
     },
   );
@@ -154,7 +142,7 @@ const getNewToken = async (id) => {
   if (!refreshUser) {
     return false;
   }
-  return result;
+  return result.hash;
 };
 
 /**
@@ -172,17 +160,12 @@ const authenticate = async (email, password) => {
   if (!user) {
     return res;
   }
-console.log(user, email, password)
-  const compare = await new Promise((resolve, reject) => {
-    /*
-    bcrypt.compare(password, user.password, function(err, pwdMatch) {
-      if (err !== null) {
-        return reject(err);
-      }
-      resolve(pwdMatch);
-    });
-    */
-  });
+  
+  const compare = compare(
+    password,
+    user.password,
+    user.password_salt
+  );
   if (compare === false) {
     return res;
   }
@@ -222,4 +205,6 @@ module.exports = {
   authenticate,
   validateAuthenticate,
   getNewToken,
+  encrypt,
+  compare,
 };
