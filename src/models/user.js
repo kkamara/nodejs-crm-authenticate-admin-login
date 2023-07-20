@@ -4,6 +4,11 @@ const { QueryTypes, } = require('sequelize');
 const config = require('../config');
 const db = require('../database');
 const { validate, } = require('email-validator');
+const { 
+  scryptSync, 
+  randomBytes, 
+  timingSafeEqual,
+} = require('crypto');
 
 /**
  * @param {Number} id
