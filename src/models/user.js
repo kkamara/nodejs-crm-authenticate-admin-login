@@ -4,7 +4,6 @@ const { QueryTypes, } = require('sequelize');
 const config = require('../config');
 const db = require('../database');
 const { validate, } = require('email-validator');
-const bcrypt = require('bcrypt');
 
 /**
  * @param {Number} id
@@ -84,12 +83,14 @@ const getUser = async (email) => {
 const getNewToken = async (id) => {
   const appKey = 'secret';
   const result = await new Promise((resolve, reject) => {
+    /*
     bcrypt.hash(appKey, 12, function(err, hash) {
       if (err !== null) {
         return reject(err);
       }
       resolve(hash);
     });
+    */
   });
   if (result instanceof Error) {
     return false;
@@ -132,12 +133,14 @@ const authenticate = async (email, password) => {
   }
 console.log(user, email, password)
   const compare = await new Promise((resolve, reject) => {
+    /*
     bcrypt.compare(password, user.password, function(err, pwdMatch) {
       if (err !== null) {
         return reject(err);
       }
       resolve(pwdMatch);
     });
+    */
   });
   if (compare === false) {
     return res;

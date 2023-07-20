@@ -23,23 +23,23 @@ const UserTokens = sequelize.define("users_tokens", {
    },
 });
 
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
   log('UserTokens table created successfully!');
   UserTokens.create({
     users_id: 1,
-    token: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    token: '',
   })
   .then(() => { log('UserTokens created.'); })
   .catch(() => { log('Unable to create userTokens.'); });
   UserTokens.create({
     users_id: 2,
-    token: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    token: '',
   })
   .then(() => { log('UserTokens created.'); })
   .catch(() => { log('Unable to create userTokens.'); });
   UserTokens.create({
     users_id: 3,
-    token: '$2a$12$06CVr6F/0HWuTMy4Nh/UB.ICDTGx639ZWRpyeAYMTLjTuSBkAcZny',
+    token: '',
   })
   .then(() => { log('UserTokens created.'); })
   .catch(() => { log('Unable to create userTokens.'); });
